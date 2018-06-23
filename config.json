@@ -1,4 +1,5 @@
 {
     "dest": "./output",
-    "artist": "elliottsmith"
+    "artist": "elliottsmith",
+    "requestInterval": 3000
 }

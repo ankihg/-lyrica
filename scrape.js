@@ -20,7 +20,7 @@ module.exports = (_config, go) => {
         let albums = {};
         let activeAlbum = null;
         let children = $('#listAlbum').children();
-        return async.eachSeries(children.slice(0, 10),
+        return async.eachSeries(children,
             function(child, go) {
                 let el = $(child);
 
@@ -86,6 +86,7 @@ function _configure(_config) {
     return {
         filepath: `${_config.dest}/${_config.artist}.json`,
         url: `https://www.azlyrics.com/${_config.artist.charAt(0)}/${_config.artist}.html`,
+        requestInterval: _config.requestInterval || 4000,
     }
 }
 
