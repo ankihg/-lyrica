@@ -11,9 +11,9 @@ const requestInterval = 4000;
 
 let config;
 module.exports = (_config, go) => {
-    config = _config;
+    config = _configure(_config);
     let tracks = [];
-    request({url: url/*, proxy: getProxy()*/}, (err, response, html) => {
+    request({url: config.url/*, proxy: getProxy()*/}, (err, response, html) => {
         if (err) return go(err);
         console.log('im back');
         let $ = cheerio.load(html);
@@ -46,7 +46,7 @@ module.exports = (_config, go) => {
                             tracks.push(song);
                             // new pac.models.Piece('arcade fire', song.album, song.name, lyricsText, el.attr('href'));
 
-                        writeToFile(tracks);
+                        _writeToFile(tracks);
                         return setTimeout(go, requestInterval);
                     });
                 }
@@ -56,7 +56,7 @@ module.exports = (_config, go) => {
                 console.log('albums', JSON.stringify(albums, null, 4));
                 console.log('pieces', JSON.stringify(tracks, null, 4));
                 if (e) return go(e);
-                return writeToFile(tracks, go);
+                return _writeToFile(tracks, go);
                 // return fs.writeFile('pieces.json', JSON.stringify(tracks, null, 4), go);
                 // console.log('emptyLyrics', emptyLyrics);
             });
@@ -78,8 +78,15 @@ function scrapeLyrics(url, go) {
     });
 }
 
-function writeToFile(tracks, go) {
-    fs.writeFile(`${config.dest}/${config.artist}.json`, JSON.stringify(tracks, null, 4), go || ((err) => {if (err) console.log(err)}));
+function _writeToFile(tracks, go) {
+    fs.writeFile(config.filepath, JSON.stringify(tracks, null, 4), go || ((err) => {if (err) console.log(err)}));
+}
+
+function _configure(_config) {
+    return {
+        filepath: `${_config.dest}/${_config.artist}.json`,
+        url: `https://www.azlyrics.com/${_config.artist.charAt(0)}/${_config.artist}.html`,
+    }
 }
 
 // let lyricsUrl = 'https://www.azlyrics.com/lyrics/arcadefire/everythingnow.html';
