@@ -21,23 +21,22 @@ module.exports = (_config, go) => {
         let activeAlbum = null;
         let children = $('#listAlbum').children();
         return async.eachSeries(children,
-            function(child, go) {
+            (child, go) => {
                 let el = $(child);
-
-                if (el[0].name == 'div') {
+                if (el.hasClass('album')) {
                     activeAlbum = el.text();
                     albums[el.text()] = [];
                     return go();
-                } if (el[0].name == 'a') {
+                } if (el.hasClass('listalbum-item')) {
                     if (!el.text()) return go();
-                    let lyricsLink = el.attr('href');
                     let song = {
                         name: el.text(),
                         album: activeAlbum,
-                        lyricsLink: el.attr('href')
+                        lyricsLink: el.children('a').attr('href'),
                     };
                     albums[activeAlbum].push(song);
-                    return scrapeLyrics(host + lyricsLink.slice(2), (e, lyricsText) => {
+                    console.log(song.lyricsLink);
+                    return scrapeLyrics(host + song.lyricsLink.slice(2), (e, lyricsText) => {
                         if (e) return go(e);
                         song.lyrics = lyricsText;
                         song.datapath = el.attr('href');
