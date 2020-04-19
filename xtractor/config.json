@@ -1,0 +1,6 @@
+{
+    "source": "../output",
+    "artist": "elliottsmith",
+    "requestInterval": 3000,
+    "limit": 2
+}
