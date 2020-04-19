@@ -8,6 +8,7 @@ const url = 'https://www.azlyrics.com/a/arcadefire.html';
 
 // const proxies = ["http://skullproxy.com"];
 const requestInterval = 4000;
+const limit = 2;
 
 let config;
 module.exports = (_config, go) => {
@@ -36,17 +37,16 @@ module.exports = (_config, go) => {
                     };
                     albums[activeAlbum].push(song);
                     console.log(song.lyricsLink);
+                    if (tracks.length >= limit) return go('END');
                     return scrapeLyrics(host + song.lyricsLink.slice(2), (e, lyricsText) => {
                         if (e) return go(e);
-                        song.lyrics = lyricsText;
+                        let phrases = lyricsText.split('\n\n').filter(p => p);
+                        song.lyrics = phrases.map(p => p.split('\n').filter(l => l));
                         song.datapath = el.attr('href');
                         console.log('\n\n', lyricsText, '\n\n');
-                        if (lyricsText)
-                            tracks.push(song);
-                            // new pac.models.Piece('arcade fire', song.album, song.name, lyricsText, el.attr('href'));
-
+                        if (lyricsText) tracks.push(song);
                         _writeToFile(tracks);
-                        return setTimeout(go, requestInterval);
+                        return setTimeout(go, config.requestInterval);
                     });
                 }
                 return go();
