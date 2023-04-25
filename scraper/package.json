@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "async": "^2.6.1",
-    "cheerio": "^1.0.0-rc.2",
+    "cheerio": "^1.0.0-rc.12",
     "request": "^2.88.2"
   }
 }
